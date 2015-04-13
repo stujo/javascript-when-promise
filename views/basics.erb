@@ -1,0 +1,42 @@
+<button id="checkout">Checkout old style</button>
+
+<script src="https://code.jquery.com/jquery-2.1.3.js"></script>
+
+<script id="example">
+    function processCheckout(event) {
+
+        $(event.target).fadeOut();
+
+        $.ajax({
+            url: '/api/order.json',
+            success: function (order_data) {
+                $.ajax({
+                    url: '/api/shipping.json',
+                    success: function (shipping_data) {
+                        $.ajax({
+                            url: '/api/taxes.json',
+                            success: function (taxes_data) {
+                                var totalCost = order_data.order_total + shipping_data.shipping_charge + taxes_data.local_taxes;
+                                alert('Total Order $' + totalCost.toFixed(2));
+                                $(event.target).fadeIn();
+                            },
+                            error: function () {
+                                $(event.target).fadeIn();
+                                console.error('Unable to load taxes');
+                            }
+                        });
+                    },
+                    error: function () {
+                        $(event.target).fadeIn();
+                        console.error('Unable to load shipping details');
+                    }
+                });
+            },
+            error: function () {
+                $(event.target).fadeIn();
+                console.error('Unable to load order');
+            }
+        });
+    }
+    $('#checkout').click(processCheckout);
+</script>

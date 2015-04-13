@@ -1,0 +1,38 @@
+<HTML>
+<HEAD>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.2/normalize.css"/>
+<style>
+  .container{
+    width: 90%;
+    margin: 0px auto;
+  }
+  .chunk{
+    text-align: center;
+    margin: 1em;
+    padding: 1em;
+    border: 0.1em solid #eee;
+  }
+</style>
+</HEAD>
+<BODY>
+<div class="container">
+  <h1>Blamazon</h1>
+  <div class="chunk">
+    <a href="/">Intro</a> 
+    | <a href="/demo">Demo</a> 
+    | <a href="/basics">Basics</a> 
+    | <a href="/promise">Promise</a>
+  </div>
+
+  <div class="chunk">
+    <%= yield %>
+  </div>
+  
+  <div class="chunk"> 
+    <a href="/api/order.json">Order JSON</a>
+    | <a href="/api/shipping.json">Shipping JSON</a>
+    | <a href="/api/taxes.json">Taxes JSON</a>
+  </div>
+</div>
+</BODY>
+</HTML>
