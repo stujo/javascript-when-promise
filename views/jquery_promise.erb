@@ -1,0 +1,38 @@
+<button id="checkout">Checkout with jQuery Promises</button>
+<script src="https://code.jquery.com/jquery-2.1.3.js"></script>
+<script id="example">
+function processCheckout(event) {
+
+    $(event.target).fadeOut();
+
+    var getOrder = $.ajax('/api/order.json').then(function(data) {
+        return data.order_total;
+    });
+
+    var getShipping = $.ajax('/api/shipping.json').then(function(data) {
+        return data.shipping_charge;
+    });
+
+    var getTaxes = $.ajax('/api/taxes.json').then(function(data) {
+        return data.local_taxes;
+    });
+
+    $.when(getOrder, getShipping, getTaxes).done(
+        function(order, shipping, taxes) {
+
+            var totalCost = order + shipping + taxes;
+
+            alert('Total Order $' + totalCost.toFixed(2));
+
+        }).fail(function() {
+
+        console.error('Unable to process order');
+
+    }).always(function() {
+
+        $(event.target).fadeIn();
+
+    });
+}
+$('#checkout').click(processCheckout);
+</script>

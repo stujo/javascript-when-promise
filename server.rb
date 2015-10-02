@@ -6,18 +6,27 @@ before '/api*' do
 end  
 
 get '/' do
+  @title = 'Index'
   erb :index
 end  
 
 get '/demo' do
+  @title = 'Demo'
   erb :demo
 end  
 
-get '/promise' do
-  erb :promise
+get '/jquery_promise' do
+  @title = 'jQuery Promise'
+  erb :jquery_promise
+end  
+
+get '/native_promise' do
+  @title = 'Native JavaScript Promise'
+  erb :native_promise
 end  
 
 get '/basics' do
+  @title = 'Basics'
   erb :basics
 end  
 

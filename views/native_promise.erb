@@ -1,0 +1,63 @@
+<button id="checkout">Checkout with Native Promises</button>
+<script id="example">
+function get(url) {
+    // Return a new promise.
+    return new Promise(function(resolve, reject) {
+        // Do the usual XHR stuff
+        var req = new XMLHttpRequest();
+        req.open('GET', url);
+
+        req.onload = function() {
+            // This is called even on 404 etc
+            // so check the status
+            if (req.status == 200) {
+                // Resolve the promise with the response text
+                resolve(req.response);
+            } else {
+                // Otherwise reject with the status text
+                // which will hopefully be a meaningful error
+                reject(Error(req.statusText));
+            }
+        };
+
+        // Handle network errors
+        req.onerror = function() {
+            reject(Error("Network Error"));
+        };
+
+        // Make the request
+        req.send();
+    });
+}
+
+function processCheckout(event) {
+
+    event.target.style.visibility = "hidden";
+
+    var getOrder = get('/api/order.json').then(JSON.parse).then(function(data) {
+        return data.order_total;
+    });
+
+    var getShipping = get('/api/shipping.json').then(JSON.parse).then(function(data) {
+        return data.shipping_charge;
+    });
+
+    var getTaxes = get('/api/taxes.json').then(JSON.parse).then(function(data) {
+        return data.local_taxes;
+    });
+
+
+    Promise.all([getOrder, getShipping, getTaxes]).then(
+        function(arrayOfResults) {
+            var totalCost = arrayOfResults[0] + arrayOfResults[1] + arrayOfResults[2];
+            alert('Total Order $' + totalCost.toFixed(2));
+        }).catch(function(err) {
+        console.log(err.toString());
+        alert('ERROR: Unable to process order');
+    }).then(function() {
+        event.target.style.visibility = "initial";
+    });
+}
+
+document.getElementById('checkout').addEventListener('click', processCheckout);
+</script>
